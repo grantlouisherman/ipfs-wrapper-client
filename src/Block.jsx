@@ -1,37 +1,23 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+const BlockService = require('ipfs-block-service')
+const Block_ = require('ipfs-block')
+const multihashing = require('multihashing-async')
+const IPFSRepo = require('ipfs-repo')  // storage repo
 
 // import CID from 'cids'
 
-class Block extends Component  {
-  constructor(props){
-    super(props)
+class Block extends Component {
+  constructor(){
+    super()
     this.state = {
       data: ''
     }
   }
-  componentDidMount(){
-    window.blockEventListener = this.blockEventListener
-  }
-  blockEventListener = event => {
-    const { type } = this.props
-    this[type]()
-  }
-  get = () => {}
-  put = () => {
-    const buf = new Buffer('a serialized object')
-    this.props.client.block.put(buf, (err, block) => {
-      if (err) { console.log(new Error(err))}
-      // Block has been stored
-      this.setState({data: block.data.toString()})
-    })
-  }
-  stat = () => {}
   render(){
     const { children, type } = this.props;
     const { data } = this.state
-    const Generic = React.cloneElement(this.props.children, { data })
-    return type === 'get' ? children({data}) : Generic
+    return this.props.children(this.state)
   }
 
 }

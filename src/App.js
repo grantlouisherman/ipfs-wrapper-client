@@ -10,7 +10,13 @@ class App extends Component {
               Edit THIS<code>src/App.js</code> and save to reload.
             </p>
             <Block client={this.props.client}>
-              <button onClick={() => ( window.blockEventListener())}>BUTTON</button>
+              {
+                  ({ data }) => {
+                    return(
+                      <div>{data}</div>
+                    )
+                  }
+                }
             </Block>
           </header>
         </div>
