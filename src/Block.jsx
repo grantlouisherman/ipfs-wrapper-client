@@ -18,9 +18,11 @@ class Blocks extends Component {
     this.createData = this.createData.bind(this)
     this.createBlock = this.createBlock.bind(this)
   }
-  
+
   createData(type, blockData){
-    return new Buffer("HELLO")
+    return type === 'file' ?
+    Buffer.from(blockData) :
+    new Buffer(blockData)
   }
   createBlock(data, multihash){
     const cid = new CID(multihash)
@@ -29,18 +31,19 @@ class Blocks extends Component {
   }
 
   componentDidMount(){
-    const { blockData, type } = this.props
+    const { blockData, type, repo } = this.props
     const data = this.createData(type, blockData)
     // setup a repo
-    const repo = new IPFSRepo('example')
-    repo.init({ cool: 'config' }, (err) => {
+    const ipfsRepo = new IPFSRepo(repo)
+    ipfsRepo.init({ cool: 'config' }, (err) => {
       if (err) {
         throw err
       }
-      repo.open((err) => {
+      ipfsRepo.open((err) => {
         if (err) {
           throw err
         }
+
         multihashing(data, 'sha2-256', (err, multihash) => {
           if (err) {
             throw err
@@ -50,7 +53,7 @@ class Blocks extends Component {
           const cid = getBlock.cid
 
           // create a service
-          const bs = new BlockService(repo)
+          const bs = new BlockService(ipfsRepo)
           // add the block, then retrieve it
           bs.put(block, (err) => {
             if (err) {
@@ -64,8 +67,8 @@ class Blocks extends Component {
             })
           })
         })
-        })
     })
+  })
 
   }
   render(){

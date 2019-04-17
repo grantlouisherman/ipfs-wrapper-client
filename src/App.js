@@ -9,7 +9,12 @@ class App extends Component {
             <p>
               Edit THIS<code>src/App.js</code> and save to reload.
             </p>
-            <Block client={this.props.client}>
+            <Block
+              client={this.props.client}
+              repo={'example'}
+              type={'string'}
+              blockData={'GRANT'}
+              >
               {
                   ({ data }) => {
                     return(
